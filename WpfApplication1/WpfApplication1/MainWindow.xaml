@@ -13,8 +13,11 @@
                 <Button Content="Color" Click="Color_Click" />
                 <Button Content="Deoth" Click="Depth_Click" />
                 <Button Content="Infrared" Click="Infrared_Click" />
+                <TextBox x:Name="Status_handPose" Height="117" TextWrapping="Wrap" Text="TextBox" Margin="0,0,445,0" FontWeight="Bold" Foreground="#FF0914F5"/>
             </StackPanel>
         </Grid>
-        
+        <Canvas Name="canvas"/>
+
+
     </Grid>
 </Window>

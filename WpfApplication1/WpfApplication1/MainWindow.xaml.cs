@@ -32,6 +32,7 @@ namespace WpfApplication1
         InfraredFrameReader irReader;
         MultiSourceFrameReader m_reader;
         Boolean colorDisplay, depthDisplay, irDisplay;
+        IList<Body> _bodies;
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
@@ -63,6 +64,36 @@ namespace WpfApplication1
             {
                 if(frame != null)
                 {
+
+                    _bodies = new Body[frame.BodyFrameSource.BodyCount];
+
+                    frame.GetAndRefreshBodyData(_bodies); 
+
+                    foreach(var body in _bodies)
+                    {
+                        if(body != null)
+                        {
+                            if (body.IsTracked)
+                            {
+                                Joint handRight = body.Joints[JointType.HandRight];
+                                Joint thumbRight = body.Joints[JointType.ThumbRight];
+
+                                float thumbRight_px = thumbRight.Position.X;
+                                float thumbRight_py = thumbRight.Position.Y;
+                                float thumbRight_pz = thumbRight.Position.Z;
+
+                                Joint handLeft = body.Joints[JointType.HandLeft];
+                                Joint thumbLeft = body.Joints[JointType.ThumbLeft];
+
+                                // Status_handPose.Text = "RT" + " X:" + thumbRight_px + " Y:" + thumbRight_py + " Z:" + thumbRight_pz;
+
+
+                                //now getting hand states from the data 
+                                Status_handPose.Text = "R: " + body.HandRightState + "L: " + body.HandRightState;
+
+                            }
+                        }
+                    }
                     //do something. 
                 }
             }
@@ -70,6 +101,7 @@ namespace WpfApplication1
             {
                 if (frame != null)
                 {
+                   
                     //do something. 
                 }
             }
@@ -122,6 +154,8 @@ namespace WpfApplication1
             int width = frame.FrameDescription.Width;
             int height = frame.FrameDescription.Height;
             var format = PixelFormats.Bgr32;
+
+            
 
             ushort minDepth = frame.DepthMinReliableDistance;
             ushort maxDepth = frame.DepthMaxReliableDistance;
