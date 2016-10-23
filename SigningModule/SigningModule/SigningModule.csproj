@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CB8AFD2A-88A9-4C85-9405-1835CBD104A5}</ProjectGuid>
+    <ProjectGuid>{679DE3BF-5F8F-48D7-898B-8DDB0C70CFC8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WpfApplication1</RootNamespace>
-    <AssemblyName>WpfApplication1</AssemblyName>
+    <RootNamespace>SigningModule</RootNamespace>
+    <AssemblyName>SigningModule</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,7 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -95,19 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MyoSharp\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\MyoSharp\MyoSharp.ConsoleSample\MyoSharp.ConsoleSample.csproj">
-      <Project>{27da6bb8-8526-437e-9293-a877fc175653}</Project>
-      <Name>MyoSharp.ConsoleSample</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MyoSharp\MyoSharp\MyoSharp.csproj">
-      <Project>{b075c7e9-fe48-4508-b44c-1a259bcc8b22}</Project>
-      <Name>MyoSharp</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
