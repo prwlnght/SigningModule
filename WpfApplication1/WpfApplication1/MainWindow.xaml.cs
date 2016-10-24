@@ -36,12 +36,22 @@ namespace WpfApplication1
         private readonly IHub hub;
         Boolean writeFlag = false;
 
-        String[] toWrite = { "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA" };
+       static String[] toWrite = { "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA" };
         String fileheader = "HL, HR, ORL, OPL, OYL, ORR, OPR, OYR, ML, MR, LXL, LYL, LZL, LXR, LYR, LZR"; 
 
         static StringBuilder csv = new StringBuilder();
         static StringBuilder csv1 = new StringBuilder();
         String filePath =  "C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\";
+        KinectSensor sensor;
+        InfraredFrameReader irReader;
+        ColorFrameReader c_reader;
+        MultiSourceFrameReader m_reader;
+        Boolean colorDisplay, depthDisplay, irDisplay;
+        IList<Body> _bodies;
+        CameraSpacePoint[] CameraSpacePoints;
+        KinectJointFilter filter = new KinectJointFilter();
+        static int frameCount;
+        // change params if you want
 
 
         //private List list = new List[8];
@@ -52,7 +62,7 @@ namespace WpfApplication1
             InitializeComponent();
             channel = Channel.Create(ChannelDriver.Create(ChannelBridge.Create()));
             channel2 = Channel.Create(ChannelDriver.Create(ChannelBridge.Create()));
-
+            frameCount = 0;
             hub = Hub.Create(channel);
             {
 
@@ -72,14 +82,11 @@ namespace WpfApplication1
             }
 
             this.Loaded += MainPage_Loaded;
+
+            
         }
 
-        KinectSensor sensor;
-        InfraredFrameReader irReader;
-        ColorFrameReader c_reader;
-        MultiSourceFrameReader m_reader;
-        Boolean colorDisplay, depthDisplay, irDisplay;
-        IList<Body> _bodies;
+      
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
@@ -106,20 +113,19 @@ namespace WpfApplication1
             StartButton.Click += StartButton_Click;
             StopButton.Click += StopButton_Click;
 
+            filter.Init();
 
         }
 
        void Reader_rgbSourceFrameArrived(object sender, ColorFrameArrivedEventArgs e)
         {
 
-            //combine towrite in to a string
-          if (writeFlag)
-           {
-                String toWrite_string = String.Join(",", toWrite);
-                csv.AppendLine(toWrite_string);
+            long milliseconds = (DateTime.Now.Ticks);
 
-                File.AppendAllText(filePath, csv.ToString());
-           }
+
+           // frameCount = frameCount % 10; // 2 is the divisor
+            
+         //   frameCount++;
 
         }
 
@@ -139,26 +145,50 @@ namespace WpfApplication1
 
                     _bodies = new Body[frame.BodyFrameSource.BodyCount];
 
-                    frame.GetAndRefreshBodyData(_bodies); 
+                    frame.GetAndRefreshBodyData(_bodies);
 
-                    foreach(var body in _bodies)
-                    {
-                        if(body != null)
+                    Body body = _bodies[0];
+                    //foreach(var body in _bodies)
+                    //{
+                        filter.UpdateFilter(body);
+                        JointType jt = JointType.HandLeft;
+                        //CameraSpacePoint c = filter.GetFilteredJoints((int)jt);
+                        if (body != null)
                         {
                             if (body.IsTracked)
                             {
-                                Joint handRight = body.Joints[JointType.HandRight];
-                                Joint thumbRight = body.Joints[JointType.ThumbRight];
+                                CameraSpacePoint[] filteredJoints = filter.GetFilteredJoints();
 
-                                float thumbRight_px = thumbRight.Position.X;
-                                float thumbRight_py = thumbRight.Position.Y;
-                                float thumbRight_pz = thumbRight.Position.Z;
 
-                                Joint handLeft = body.Joints[JointType.HandLeft];
-                                Joint thumbLeft = body.Joints[JointType.ThumbLeft];
+                            Status_handPose.Text = "Detected";
+                              Joint handRight = body.Joints[JointType.HandRight];
+                              Joint handLeft = body.Joints[JointType.HandLeft];
+                                Joint headState = body.Joints[JointType.Head];
+
+                   
+                            JointOrientation 
+
+
+
 
                                 toWrite[0] = body.HandRightState.ToString(); 
-                                toWrite[1] = body.HandLeftState.ToString(); 
+                                toWrite[1] = body.HandLeftState.ToString();
+                                toWrite[10] = (handLeft.Position.X).ToString();
+                                toWrite[11] = (handLeft.Position.Y).ToString();
+                                toWrite[12] = (handLeft.Position.Z).ToString();
+                                toWrite[13] = (handRight.Position.X).ToString();
+                                toWrite[14] = (handRight.Position.Y).ToString();
+                                toWrite[15] = (handRight.Position.Z).ToString();
+                                if (writeFlag)
+                                {
+
+                                    String toWrite_string = String.Join(",", toWrite);
+                                    csv.AppendLine(toWrite_string + ",");
+
+
+
+                                }
+
 
                                 //var newLine = string.Format("O,C,L,U");
 
@@ -172,7 +202,7 @@ namespace WpfApplication1
 
                             }
                         }
-                    }
+                    //}
                     //do something. 
                 }
             }
@@ -309,9 +339,9 @@ namespace WpfApplication1
         void StartButton_Click(Object sender, RoutedEventArgs e)
         {
 
-            String gestureName = gesture_name.ToString(); 
+            String gestureName = gesture_name.Text.ToString(); 
 
-            String fileName = "gestureName" + DateTime.Now.ToString("HHmmsstt") + ".csv";
+            String fileName = "" + gestureName + DateTime.Now.ToString("HHmmsstt") + ".csv";
             filePath = filePath + fileName;
             csv1.AppendLine(fileheader);
 
@@ -323,6 +353,7 @@ namespace WpfApplication1
         void StopButton_Click(Object sender, RoutedEventArgs e)
         {
             writeFlag = false;
+            File.AppendAllText(filePath, csv.ToString());
         }
 
         private static void Myo_PoseChanged(object sender, PoseEventArgs e)
@@ -359,10 +390,17 @@ namespace WpfApplication1
             if (e.Myo.Handle.ToString() == id[0])
             {
                 EMGtxxt = "\nRoll" + roll.ToString() + " Pitch" + pitch.ToString() + " Yaw" + yaw.ToString() + "Right\n";
+                toWrite[2] = roll.ToString();
+                toWrite[3] = pitch.ToString();
+                toWrite[4] = yaw.ToString();
+
             }
             if (e.Myo.Handle.ToString() == id[1])
             {
                     EMGtxxtR = "\nRoll" + roll.ToString() + " Pitch" + pitch.ToString() + " Yaw" + yaw.ToString() + "Left\n";
+                toWrite[5] = roll.ToString();
+                toWrite[6] = pitch.ToString();
+                toWrite[7] = yaw.ToString();
             }
             else
             {
@@ -393,5 +431,8 @@ namespace WpfApplication1
 
 
         
+
+
+
     }
 }
