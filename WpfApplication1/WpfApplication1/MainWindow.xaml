@@ -9,12 +9,12 @@
 
     <Grid>
         <Image Name="image" />
-       <!-- <Canvas Name="bodyCanvas" Width="512 " Height=" 424"/> -->
         <Grid>
             <StackPanel Margin="0,-10,0,10">
-                <Button Content="Color" Click="Color_Click" />
-                <Button Content="Depth" Click="Depth_Click" />
-                <Button Content="Infrared" Click="Infrared_Click" />
+                <Button Content="Color" Click="Color_Click"  Width="75" HorizontalAlignment="Left"/>
+                <Button Content="Depth" Click="Depth_Click"  Width="75" HorizontalAlignment="Left" />
+                <Button Content="Infrared" Click="Infrared_Click" HorizontalAlignment="Left"  Width="75"/>
+                <Button Content="Skeletal" Click="Skeletal_Click" HorizontalAlignment="Left"  Width="75"/>
                 <TextBox x:Name="Status_handPose" Height="24" TextWrapping="Wrap" Text="TextBox" Margin="0,0,396,0" FontWeight="Bold" Foreground="#FF0914F5"/>
             </StackPanel>
         </Grid>

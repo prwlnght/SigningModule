@@ -297,11 +297,7 @@ namespace WpfApplication1
                            // bodyCanvas.Children.Add(headCircle);
                            // Canvas.SetLeft(bodyCanvas, depthSpacePoint.X-25);
                             //Canvas.SetTop(bodyCanvas, depthSpacePoint.Y-25);
-                            
-                            
-                            
-                           
-                    
+
                     
                         }
                         this.DrawBody(joints, jointPoints, dc, drawPen);
@@ -589,6 +585,11 @@ namespace WpfApplication1
         void Color_Click(Object sender, EventArgs e)
         {
             irDisplay = false; colorDisplay = true; depthDisplay = false;
+
+        }
+        void Skeletal_Click(Object sender, EventArgs e)
+        {
+            irDisplay = false; colorDisplay = false; depthDisplay = false;
 
         }
 
