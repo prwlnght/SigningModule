@@ -1,0 +1,51 @@
+import os
+import csv
+
+inputdir = 'C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\toSplit'
+outputdir = 'C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\splitData'
+
+
+
+
+
+
+
+
+
+
+for fichier in os.listdir(inputdir):
+    #print 'fichier :' + fichier
+    sourceFile = inputdir + '\\' + fichier
+    #split(open(sourceFile),',','output_%s.csv',outputdir,True)
+    filehandler = open(sourceFile)
+    delimiter = ','
+    output_path = outputdir
+    output_name_template = fichier+'_%s.csv'
+    keep_headers = True
+
+    reader = csv.reader(filehandler, delimiter=delimiter)
+    current_piece = 1
+    current_out_path = os.path.join(
+        output_path,
+        output_name_template % current_piece
+    )
+    current_out_writer = csv.writer(open(current_out_path, 'w', newline=''), delimiter=delimiter)
+    current_limit = 5
+    if keep_headers:
+        headers = reader.__next__()
+        current_out_writer.writerow(headers)
+
+    for i, row in enumerate(reader):
+        if row[0] == "#":
+            if current_piece <= 5:
+                current_piece += 1
+                # current_limit = row_limit * current_piece
+                current_out_path = os.path.join(
+                    output_path,
+                    output_name_template % current_piece
+                )
+            current_out_writer = csv.writer(open(current_out_path, 'w', newline=''), delimiter=delimiter)
+            if keep_headers:
+                current_out_writer.writerow(headers)
+        if row[0] != "#":
+            current_out_writer.writerow(row)

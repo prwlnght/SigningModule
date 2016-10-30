@@ -18,10 +18,11 @@
                 <TextBox x:Name="Status_handPose" Height="24" TextWrapping="Wrap" Text="TextBox" Margin="0,0,396,0" FontWeight="Bold" Foreground="#FF0914F5"/>
             </StackPanel>
         </Grid>
-        <TextBox x:Name="gesture_name" Height="23" Canvas.Left="10" TextWrapping="Wrap" Text="TextBox" Canvas.Top="360" Width="120" Margin="0,361,384,9"/>
+        <TextBox x:Name="gesture_name" Height="23" Canvas.Left="10" TextWrapping="Wrap" Text="TextBox" Canvas.Top="360" Width="120" Margin="10,336,374,34"/>
 
         <Button x:Name="StartButton" Content="Start" HorizontalAlignment="Left" Margin="137,339,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="137,364,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="Segment" Content="Segment" HorizontalAlignment="Left" Margin="137,303,0,59" Width="75"/>
 
 
     </Grid>

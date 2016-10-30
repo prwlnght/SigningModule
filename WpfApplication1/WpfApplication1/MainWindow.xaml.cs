@@ -25,7 +25,7 @@ using MyoSharp.Device;
 using MyoSharp.Poses;
 using MyoSharp.Exceptions;
 using MyoSharp.ConsoleSample.Internal;
-
+using NDtw;
 
 
 namespace WpfApplication1
@@ -36,18 +36,23 @@ namespace WpfApplication1
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public static String[] id;
+        double[] a = { .5, 1, 1.5, 2, 0, 0,  2.5, 3};
+        double[] b = { .5, 1, 1.5, 2, 2.5, 3, 3.5, 4};
+        
 
         #region Writing to file
         static StringBuilder csv = new StringBuilder(); // to write data
         static StringBuilder csv1 = new StringBuilder(); // to write the file header 
         String filePath = "C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\";
         Boolean writeFlag = false;
-        static String[] toWrite = { "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA" };
-        String fileheader = "HL, HR, ORL, OPL, OYL, ORR, OPR, OYR, ML, MR, LXL, LYL, LZL, LXR, LYR, LZR";
+        static String[] toWrite = { "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA" };
+        String fileheader = "HL, HR, ORL, OPL, OYL, ORR, OPR, OYR, ML, MR, LXL, LYL, LZL, LXR, LYR, LZR, HX, HY, HZ, TLX, TLY, TLZ, TRX, TRY, TRZ";
+        String Segmenter = "#, #, #, #, #, #, #, #, #, #, #, #, #, #, #, #, #, #, #,  #, #, #, #, #, # ";
         #endregion
         #region Myo Related 
         private readonly IChannel channel, channel2;
         private readonly IHub hub;
+        String fileName;
 
         #endregion
         #region kinect related  declarations
@@ -98,6 +103,7 @@ namespace WpfApplication1
         {
             InitializeComponent();
             sensor = KinectSensor.GetDefault();
+            
             //init class variables 
             frameCount = 0;
             #region Myo related //Initialize Myo Channels from Myo Sharp
@@ -130,6 +136,12 @@ namespace WpfApplication1
             this.displayHeight = frameDescription.Height;
             #endregion Skeletal overlay
             this.Loaded += MainPage_Loaded;
+
+            var cost = new Dtw(a, b ).GetCost();
+            gesture_name.Text = cost.ToString();
+
+
+
         }
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -144,6 +156,7 @@ namespace WpfApplication1
             irDisplay = false;
             StartButton.Click += StartButton_Click;
             StopButton.Click += StopButton_Click;
+            Segment.Click += Segment_Click;
             filter.Init();
 
             
@@ -204,6 +217,9 @@ namespace WpfApplication1
                     Status_handPose.Text = "Detected";
                     Joint handRight = body.Joints[JointType.HandRight];
                     Joint handLeft = body.Joints[JointType.HandLeft];
+                    Joint thumbLeft = body.Joints[JointType.ThumbLeft];
+                    Joint thumbRight = body.Joints[JointType.ThumbRight];
+
                     headJoint = body.Joints[JointType.Head];
                     toWrite[0] = body.HandRightState.ToString();
                     toWrite[1] = body.HandLeftState.ToString();
@@ -213,6 +229,18 @@ namespace WpfApplication1
                     toWrite[13] = (handRight.Position.X).ToString();
                     toWrite[14] = (handRight.Position.Y).ToString();
                     toWrite[15] = (handRight.Position.Z).ToString();
+                    toWrite[16] = (headJoint.Position.X).ToString();
+                    toWrite[17] = (headJoint.Position.Y).ToString();
+                    toWrite[18] = (headJoint.Position.Z).ToString();
+                    
+                    toWrite[19] = (thumbLeft.Position.X).ToString();
+                    toWrite[20] = (thumbLeft.Position.Y).ToString();
+                    toWrite[21] = (thumbLeft.Position.Z).ToString();
+
+                    toWrite[22] = (thumbRight.Position.X).ToString();
+                    toWrite[23] = (thumbRight.Position.Y).ToString();
+                    toWrite[24] = (thumbRight.Position.Z).ToString();
+
                     if (writeFlag)
                     {
                         String toWrite_string = String.Join(",", toWrite);
@@ -598,7 +626,7 @@ namespace WpfApplication1
 
             String gestureName = gesture_name.Text.ToString();
 
-            String fileName = "" + gestureName + DateTime.Now.ToString("HHmmsstt") + ".csv";
+            fileName = "" + gestureName + DateTime.Now.ToString("HHmmsstt") + ".csv";
             filePath = filePath + fileName;
             csv1.AppendLine(fileheader);
 
@@ -607,10 +635,26 @@ namespace WpfApplication1
 
         }
 
+        void Segment_Click(Object sender, RoutedEventArgs e)
+        {
+            { 
+            //String gestureName = gesture_name.Text.ToString();
+
+            //String fileName = "" + gestureName + DateTime.Now.ToString("HHmmsstt") + ".csv";
+         //   filePath = filePath + fileName;
+            csv.AppendLine(Segmenter);
+
+           // File.AppendAllText(filePath, csv.ToString());
+            }
+
+        }
+
         void StopButton_Click(Object sender, RoutedEventArgs e)
         {
             writeFlag = false;
             File.AppendAllText(filePath, csv.ToString());
+            csv.Clear();
+            fileName = "";
         }
         #endregion Click functions
         #region Myo Event Handlers 
