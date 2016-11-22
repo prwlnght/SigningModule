@@ -43,7 +43,9 @@ namespace WpfApplication1
         #region Writing to file
         static StringBuilder csv = new StringBuilder(); // to write data
         static StringBuilder csv1 = new StringBuilder(); // to write the file header 
+                              
         String filePath = "C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\";
+
         Boolean writeFlag = false;
         static String[] toWrite = { "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA" };
         String fileheader = "HL, HR, ORL, OPL, OYL, ORR, OPR, OYR, ML, MR, LXL, LYL, LZL, LXR, LYR, LZR, HX, HY, HZ, TLX, TLY, TLZ, TRX, TRY, TRZ";
@@ -715,13 +717,13 @@ namespace WpfApplication1
         private void Hub_MyoDisconnected(object sender, MyoEventArgs e)
         {
             e.Myo.EmgDataAcquired -= Myo_EmgDataAcquired;
+            //Console.WriteLine("Oh no! It looks like {0} arm Myo has disconnected!", e.Myo.Arm);
         }
 
         private void Hub_MyoConnected(object sender, MyoEventArgs e)
         {
 
             EMGtxxt += e.Myo.Handle.ToString() + ",";
-
 
 
             id = EMGtxxt.Split(',');

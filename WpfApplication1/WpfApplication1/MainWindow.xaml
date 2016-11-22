@@ -22,7 +22,7 @@
 
         <Button x:Name="StartButton" Content="Start" HorizontalAlignment="Left" Margin="137,339,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="StopButton" Content="Stop" HorizontalAlignment="Left" Margin="137,364,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="Segment" Content="Segment" HorizontalAlignment="Left" Margin="137,303,0,59" Width="75"/>
+        <Button x:Name="Segment" Content="Segment" HorizontalAlignment="Left" Margin="137,314,0,0" VerticalAlignment="Top" Width="75"  />
 
 
     </Grid>
