@@ -6,29 +6,30 @@
 import csv
 import numpy
 import scipy
-from scipy.spatial.distance import euclidean,cosine,hamming,braycurtis
+from scipy.spatial.distance import euclidean,cosine,hamming,braycurtis,correlation
 from fastdtw import fastdtw
 import os
 import re
 from operator import itemgetter
 
-path = 'C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\splitDataClean\\'
+path = 'C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\splitDataClean_old\\'
 
 inputfile = 'C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\splitDataClean\\'
 
+testinputfile = 'C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\splitDataCleanTest\\'
 
 
 
 #for each file in files in this dir
-for fichier in os.listdir(path):
+for fichier in os.listdir(testinputfile):
     print("TEST_DATA")
     print(re.split("[0-9]", fichier)[0])
     findme = re.split("[0-9]", fichier)[0]
-    reader = csv.reader(open(path + fichier, "r"), delimiter=',')
+    reader = csv.reader(open(testinputfile + fichier, "r"), delimiter=',')
     y = list(reader)
     csv1 = numpy.array(y).astype('float')
     totest = os.listdir(path)
-    totest.remove(fichier)
+    #totest.remove(fichier)
     distance = []
     for testfile in totest:
         #print("TEST_WITH_FILE")
@@ -38,15 +39,24 @@ for fichier in os.listdir(path):
         reader = csv.reader(open(path + testfile, "r"), delimiter=',')
         x = list(reader)
         csv2 = numpy.array(x).astype('float')
-        a, b = fastdtw(csv1, csv2, dist=cosine)
+        #print(csv1[:,7])
+        #break
+        a, b = fastdtw(csv1[:,6:12], csv2[:,6:12], dist=cosine)
         #if (classwithinitial[-1] != findme[-1]):
         distance.append((a,classwithinitial))
     distance.sort(key = lambda x: x[0])
     count = 0
+    temparray = []
     for aTuple in distance:
-        count += 1
-        print(aTuple)
-        if count == 10:
+        if count ==0:
+          temparray.append(aTuple[1])
+          count += 1
+          print(aTuple)
+        elif aTuple[1] not in temparray:
+            temparray.append(aTuple[1])
+            count += 1
+            print(aTuple)
+        if count == 30:
             break
 
 

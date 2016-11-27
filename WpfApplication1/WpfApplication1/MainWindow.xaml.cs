@@ -45,6 +45,7 @@ namespace WpfApplication1
         static StringBuilder csv1 = new StringBuilder(); // to write the file header 
                               
         String filePath = "C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\";
+        bool isTest_Bool = false;
 
         Boolean writeFlag = false;
         static String[] toWrite = { "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA" };
@@ -159,10 +160,12 @@ namespace WpfApplication1
             StartButton.Click += StartButton_Click;
             StopButton.Click += StopButton_Click;
             Segment.Click += Segment_Click;
+            isTest.Click += IsTest_Click;
             filter.Init();
 
             
         }
+
 
         void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
@@ -602,6 +605,26 @@ namespace WpfApplication1
         }
         #endregion Display
         #region Click functions 
+        private void IsTest_Click(Object sender, EventArgs e)
+        {
+            //change the folder to write
+            filePath = "C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\test\\";
+
+            //flip 
+            isTest_Bool = !isTest_Bool;
+            // isTest
+            if (isTest_Bool) isTest.Content = "NowTesting";
+            else
+            {
+                isTest.Content = "NowTraining";
+                filePath = "C:\\Users\\ppaudyal\\Google Drive\\School\\Fall2016\\NLP\\Project\\Data\\";
+            }
+
+        }
+
+
+
+
         void Infrared_Click(Object sender, EventArgs e)
         {
             irDisplay = true; colorDisplay = false; depthDisplay = false;
